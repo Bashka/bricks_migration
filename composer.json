@@ -1,6 +1,6 @@
 {
     "name": "bashka/bricks_migration",
-    "version": "0.8",
+    "version": "0.9",
     "description": "Механизм версионных миграций",
     "license": "GNU-3.0",
     "authors": [

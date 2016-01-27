@@ -41,18 +41,49 @@ class Manager{
   }
 
   /**
+   * Проверяет, возможен ли upgrade с помощью данной миграции.
+   *
+   * @param Migration $migration Целевая миграция для upgrade.
+   *
+   * @return bool true - если данную миграцию можно использовать для выполнения 
+   * upgrade.
+   */
+  public function isUp(Migration $migration){
+    if(in_array(get_class($migration), $this->completed)){
+      return false;
+    }
+
+    return true;
+  }
+
+  /**
+   * Проверяет, возможен ли downgrade с помощью данной миграции.
+   *
+   * @param Migration $migration Целевая миграция для downgrade.
+   *
+   * @return bool true - если данную миграцию можно использовать для выполнения 
+   * downgrade.
+   */
+  public function isDown(Migration $migration){
+    if(!in_array(get_class($migration), $this->completed)){
+      return false;
+    }
+
+    return true;
+  }
+
+  /**
    * Выполняет миграцию.
    *
    * @param Migration $migration Выполняемый экземпляр миграции.
    */
   public function up(Migration $migration){
-    $migrationClass = get_class($migration);
-    if(in_array($migrationClass, $this->completed)){
+    if(!$this->isUp($migration)){
       return;
     }
 
     $migration->up();
-    $this->completed[] = $migrationClass;
+    $this->completed[] = get_class($migration);
     file_put_contents($this->journalPath, serialize($this->completed));
   }
 
@@ -60,13 +91,16 @@ class Manager{
    * Откатывает миграцию.
    *
    * @param Migration $migration Откатываемый экземпляр миграции.
+   *
+   * @return bool true - если downgrade выполнен, иначе - false.
    */
   public function down(Migration $migration){
-    if(($p = array_search(get_class($migration), $this->completed)) === false){
-      return false;
+    if(!$this->isDown($migration)){
+      return;
     }
 
     $migration->down();
+    $p = array_search(get_class($migration), $this->completed);
     array_splice($this->completed, $p, 1);
     file_put_contents($this->journalPath, serialize($this->completed));
   }
