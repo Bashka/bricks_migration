@@ -45,3 +45,22 @@ $manager->up($migration);
 
 Upgrade будет выполнен только в случае отсутствия миграции в журнале. Downgrade 
 выполняется при обратных условиях.
+
+# Загрузка миграций
+
+Интерфейс _LoaderInterface_ описывает классы, способные определять и загружать список доступных миграций приложения. Он расширяет интерфейс _Iterator_, что позволяет выполнять проход по коллекции загруженных миграций.
+
+## GlobLoader
+
+Загрузчик _GlobLoader_ использует glob-шаблон для поиска и загрузки миграций:
+
+```php
+use Bricks\Migration\Manager;
+use Bricks\Migration\Loader\GlobLoader;
+
+$manager = new Manager('storage/journal.txt');
+$loader = new GlobLoader(__NAMESPACE__ . '\Migrations', __DIR__ . '/Migrations', '*Migration.php');
+foreach($loader as $migration){
+    $manager->up($migration);
+}
+```

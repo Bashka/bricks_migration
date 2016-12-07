@@ -1,21 +1,31 @@
 {
-    "name": "bashka/bricks_migration",
-    "version": "0.9",
-    "description": "Механизм версионных миграций",
-    "license": "GNU-3.0",
-    "authors": [
-        {
-            "name": "Artur Sh. Mamedbekov",
-            "email": "Artur-Mamedbekov@yandex.ru"
-        }
-    ],
-    "require": {
-      "php": ">=5.5.0"
-    },
-    "autoload": {
-      "classmap": [
-        "Migration.php",
-        "Manager.php"
-      ]
-    }
+	"name": "bashka/bricks_migration",
+	"description": "Механизм версионных миграций",
+	"license": "GNU-3.0",
+	"authors": [
+		{
+			"name": "Artur Sh. Mamedbekov",
+			"email": "Artur-Mamedbekov@yandex.ru"
+		}
+	],
+	"require": {
+		"php": ">=5.5.0"
+	},
+	"require-dev": {
+		"phpunit/PHPUnit": "~4.0"
+	},
+	"autoload": {
+		"classmap": [
+			"Migration.php",
+			"Manager.php"
+		],
+		"psr-4": {
+			"Bricks\\Migration\\Loader\\": "Loader/"
+		}
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"Bricks\\Migration\\UnitTest\\": "test/"
+		}
+	}
 }
